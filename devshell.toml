@@ -3,6 +3,10 @@
 package = "colima"
 
 [[commands]]
+name = "helm"
+package = "kubernetes-helm"
+
+[[commands]]
 package = "kind"
 
 [[commands]]
