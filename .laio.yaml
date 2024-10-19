@@ -1,0 +1,15 @@
+name: k8s-playground
+path: .
+windows:
+  - name: code
+    panes:
+      - flex: 1
+        commands:
+          - $EDITOR
+  - name: misc
+    panes:
+      - flex: 1
+        commands:
+          - kind get clusters | grep -q 'k8s-playground' || kind create cluster --name k8s-playground
+          - kx kind-k8s-playground
+      - flex: 1
