@@ -1,4 +1,8 @@
 # https://numtide.github.io/devshell
+packages = [
+  "pyright"
+]
+
 [[commands]]
 package = "colima"
 

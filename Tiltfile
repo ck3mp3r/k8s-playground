@@ -1,5 +1,7 @@
-load('./tilt/vault_helm_deploy.py', 'vault_helm_deploy')
+load('./tilt/vault_helm_deploy.py', 'vault_helm_deploy') # type: ignore
 
-# Call the function from the extension
-vault_helm_deploy()
-
+k8s_resource( # type: ignore
+    vault_helm_deploy(), # type: ignore
+    port_forwards=[8200],
+    extra_pod_selectors=[{'app.kubernetes.io/name': 'vault'}],
+)

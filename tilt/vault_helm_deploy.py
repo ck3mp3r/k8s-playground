@@ -1,29 +1,21 @@
-# Import Tilt's helm extension
-load('ext://helm_resource', 'helm_resource', 'helm_repo')
+load('ext://helm_resource', 'helm_resource', 'helm_repo') # type: ignore
 
-def vault_helm_deploy():
+def vault_helm_deploy(values_file='./vault/values.yaml'):
+    helm_repo('hashicorp', 'https://helm.releases.hashicorp.com') # type: ignore
 
-    # Add the HashiCorp Helm repo
-    helm_repo('hashicorp', 'https://helm.releases.hashicorp.com')
-
-    # Deploy Vault using Helm with the Vault Helm chart from the repo, automatically creating the namespace
-    helm_resource(
+    helm_resource( # type: ignore
         'vault',
         'hashicorp/vault',
         namespace="vault",
-        port_forwards=[
-          8200
-        ],
         pod_readiness='ignore',
         flags=[
-          '--values=./vault/values.yaml',
-          '--create-namespace'
+          '--values='+values_file,
+          '--create-namespace',
         ],
         resource_deps=['hashicorp'],
     )
 
-    # Wait for the Vault pod to be created, initialize Vault, and unseal it
-    local_resource(
+    local_resource( # type: ignore
         'vault-init-and-unseal',
         cmd="""
         # Wait for the Vault pod to be in Running state
@@ -58,3 +50,5 @@ def vault_helm_deploy():
         """,
         resource_deps=['vault'],
     )
+
+    return 'vault'
