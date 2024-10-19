@@ -5,12 +5,6 @@ server:
   extraEnvironmentVars:
     VAULT_LOG_LEVEL: debug
 
-  # Configure Kubernetes-based auto-unseal
-  seal:
-    kubernetes:
-      secretName: vault-unseal-secret
-      namespace: vault
-
   dataStorage:
     enabled: true
     size: 10Gi
