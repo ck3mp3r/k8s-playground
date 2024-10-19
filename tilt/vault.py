@@ -1,6 +1,6 @@
 load('ext://helm_resource', 'helm_resource', 'helm_repo')  # type: ignore
 
-def vault_helm_deploy(values_file='./vault/values.yaml', secrets={}):
+def vault_deploy(values_file='./vault/values.yaml', secrets={}):
     helm_repo('hashicorp', 'https://helm.releases.hashicorp.com')  # type: ignore
 
     helm_resource(  # type: ignore
@@ -63,7 +63,7 @@ def vault_helm_deploy(values_file='./vault/values.yaml', secrets={}):
 
     for path, kv_pairs in secrets.items():
         kv_string = " ".join(["{}={}".format(key, value) for key, value in kv_pairs.items()])
-        seed_cmds += 'vault kv put cubbyhole/' + path + ' ' + kv_string + '\n'
+        seed_cmds += 'vault kv put ' + path + ' ' + kv_string + '\n'
 
     local_resource(  # type: ignore
         'vault-seed-secrets',

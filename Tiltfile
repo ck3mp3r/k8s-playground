@@ -1,11 +1,16 @@
-load('./tilt/vault_helm_deploy.py', 'vault_helm_deploy') # type: ignore
+load('./tilt/vault.py', 'vault_deploy') # type: ignore
+load('./tilt/oam.py', 'oam_deploy') # type: ignore
 
-vault_helm_deploy( # type: ignore
+vault_deploy( # type: ignore
   values_file="./vault/values.yaml",
   secrets={
-    "myapp":{
+    "cubbyhole/myapp":{
               "foo":"bar",
-              "bar":"bas",
+              "bar":"baz",
             }
   }
 ) 
+
+oam_deploy( # type: ignore
+  values_file="./oam/values.yaml"
+)
