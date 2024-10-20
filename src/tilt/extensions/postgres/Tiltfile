@@ -1,13 +1,13 @@
-load("ext://helm_resource", "helm_resource", "helm_repo")  
-load("ext://namespace", "namespace_yaml")  
+load("ext://helm_resource", "helm_resource", "helm_repo")
+load("ext://namespace", "namespace_yaml")
 
 
 def postgres_deploy(values_file):
-    helm_repo("bitnami", "https://charts.bitnami.com/bitnami", "bitnami-postgres")  
+    helm_repo("bitnami", "https://charts.bitnami.com/bitnami", "bitnami-postgres")
 
-    k8s_yaml(namespace_yaml("postgres"))  
+    k8s_yaml(namespace_yaml("postgres"))
 
-    helm_resource(  
+    helm_resource(
         "postgres",
         "bitnami/postgresql",
         namespace="postgres",

@@ -35,7 +35,7 @@ def vault_deploy(values_file, secrets={}):
 
     local_resource(
         "vault-seed-secrets",
-        cmd=str(read_file(rel_path + "/seed-secrets.sh")).replace(
+        cmd=str(read_file(rel_path + "//seed-secrets.sh")).replace(
             "__SEED_CMDS__", seed_cmds
         ),
         resource_deps=["vault-init-and-unseal"],
