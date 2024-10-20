@@ -1,0 +1,11 @@
+---
+server:
+  ha:
+    enabled: false
+  extraEnvironmentVars:
+    VAULT_LOG_LEVEL: debug
+
+  dataStorage:
+    enabled: true
+    size: 10Gi
+    storageClass: "standard"
