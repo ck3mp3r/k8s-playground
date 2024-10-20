@@ -3,7 +3,7 @@ load("ext://namespace", "namespace_yaml")  # type: ignore
 
 
 def kafka_deploy(values_file):
-    helm_repo("bitnami", "https://charts.bitnami.com/bitnami")  # type: ignore
+    helm_repo("bitnami", "https://charts.bitnami.com/bitnami", "bitnami-kafka")  # type: ignore
 
     k8s_yaml(namespace_yaml("kafka"))  # type: ignore
     
@@ -15,5 +15,5 @@ def kafka_deploy(values_file):
         flags=[
             "--values=" + values_file,
         ],
-        resource_deps=["bitnami"],
+        resource_deps=["bitnami-kafka"],
     )

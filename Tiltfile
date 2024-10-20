@@ -1,6 +1,7 @@
 load('./src/tilt/vault.py', 'vault_deploy') # type: ignore
 load('./src/tilt/oam.py', 'oam_deploy') # type: ignore
 load('./src/tilt/kafka.py', 'kafka_deploy') # type: ignore
+load('./src/tilt/postgres.py', 'postgres_deploy') # type: ignore
 
 update_settings(  #type: ignore
   max_parallel_updates = 4,
@@ -24,4 +25,8 @@ oam_deploy( # type: ignore
 
 kafka_deploy( # type: ignore
   values_file="./src/helm/kafka/values.yaml"
+)
+
+postgres_deploy( # type: ignore
+  values_file="./src/helm/postgres/values.yaml"
 )
