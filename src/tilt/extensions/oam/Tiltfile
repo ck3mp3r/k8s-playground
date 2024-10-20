@@ -1,0 +1,19 @@
+load("ext://helm_resource", "helm_resource", "helm_repo")  
+load("ext://namespace", "namespace_yaml")  
+
+
+def oam_deploy(values_file):
+    helm_repo("kubevela", "https://charts.kubevela.net/core")  
+
+    k8s_yaml(namespace_yaml("vela-system"))  
+
+    helm_resource(  
+        "vela-core",
+        "kubevela/vela-core",
+        namespace="vela-system",
+        pod_readiness="ignore",
+        flags=[
+            "--values=" + values_file,
+        ],
+        resource_deps=["kubevela"],
+    )
