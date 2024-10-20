@@ -2,7 +2,7 @@ load("ext://helm_resource", "helm_resource", "helm_repo")  # type: ignore
 load("ext://namespace", "namespace_yaml")  # type: ignore
 
 
-def oam_deploy(values_file="./oam/values.yaml"):
+def oam_deploy(values_file):
     helm_repo("kubevela", "https://charts.kubevela.net/core")  # type: ignore
 
     k8s_yaml(namespace_yaml("vela-system"))  # type: ignore

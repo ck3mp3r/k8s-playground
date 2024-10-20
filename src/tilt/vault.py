@@ -2,7 +2,7 @@ load("ext://helm_resource", "helm_resource", "helm_repo")  # type: ignore
 load("ext://namespace", "namespace_yaml")  # type: ignore
 
 
-def vault_deploy(values_file="./vault/values.yaml", secrets={}):
+def vault_deploy(values_file, secrets={}):
     rel_path = os.path.dirname(__file__)  # type: ignore
     helm_repo("hashicorp", "https://helm.releases.hashicorp.com")  # type: ignore
 
