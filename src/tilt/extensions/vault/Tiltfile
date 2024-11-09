@@ -4,7 +4,8 @@ load("ext://namespace", "namespace_yaml")
 
 def vault_deploy(values_file, secrets={}):
     rel_path = os.path.dirname(__file__)
-    helm_repo("hashicorp", "https://helm.releases.hashicorp.com")
+    labels = "vault"
+    helm_repo("hashicorp", "https://helm.releases.hashicorp.com", labels=labels)
 
     k8s_yaml(namespace_yaml("vault"))
 
@@ -17,12 +18,14 @@ def vault_deploy(values_file, secrets={}):
             "--values=" + values_file,
         ],
         resource_deps=["hashicorp"],
+        labels=labels,
     )
 
     local_resource(
         "vault-init-and-unseal",
         cmd=str(read_file(rel_path + "/init-unseal.sh")),
         resource_deps=["vault"],
+        labels=labels,
     )
 
     seed_cmds = ""
@@ -39,10 +42,12 @@ def vault_deploy(values_file, secrets={}):
             "__SEED_CMDS__", seed_cmds
         ),
         resource_deps=["vault-init-and-unseal"],
+        labels=labels,
     )
 
     local_resource(
         "vault-port-forward",
         serve_cmd="kubectl port-forward svc/vault 8200:8200 --namespace=vault",
         resource_deps=["vault-init-and-unseal"],
+        labels=labels,
     )

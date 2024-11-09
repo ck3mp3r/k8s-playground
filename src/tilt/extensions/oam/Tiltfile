@@ -3,7 +3,8 @@ load("ext://namespace", "namespace_yaml")
 
 
 def oam_deploy(values_file):
-    helm_repo("kubevela", "https://charts.kubevela.net/core")
+    labels = "OAM"
+    helm_repo("kubevela", "https://charts.kubevela.net/core", labels=labels)
 
     k8s_yaml(namespace_yaml("vela-system"))
 
@@ -16,4 +17,5 @@ def oam_deploy(values_file):
             "--values=" + values_file,
         ],
         resource_deps=["kubevela"],
+        labels=labels,
     )
