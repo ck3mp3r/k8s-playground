@@ -4,10 +4,9 @@ metadata:
   name: database
   namespace: vela-system
 spec:
-  appliesToWorkloads:
-    - deployments.apps
-    - statefulsets.apps
+  appliesToWorkloads: 
+    - "*"
   schematic:
     cue:
       template: |
-{{ .Files.Get "cue/traits/db.cue" | nindent 8 }}
+        {{ .Files.Get "cue/traits/db.cue" | nindent 8 }}
