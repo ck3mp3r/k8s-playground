@@ -14,7 +14,7 @@ load("ext://namespace", "namespace_yaml")
 
 update_settings(  # type: ignore
     max_parallel_updates=4,
-    k8s_upsert_timeout_secs=60,
+    k8s_upsert_timeout_secs=240,
     suppress_unused_image_warnings=None,
 )
 
