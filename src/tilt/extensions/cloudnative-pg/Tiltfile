@@ -2,7 +2,7 @@ load("ext://helm_resource", "helm_resource", "helm_repo")
 load("ext://namespace", "namespace_yaml")
 
 
-def cn_pg_deploy(values_file):
+def cloudnative_pg_deploy(values_file):
     labels = "postgres"
 
     # Add the CloudNativePG Helm repository

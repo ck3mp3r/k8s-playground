@@ -4,11 +4,11 @@ v1alpha1.extension_repo(
 v1alpha1.extension(name="vault", repo_name="local", repo_path="vault")
 v1alpha1.extension(name="oam", repo_name="local", repo_path="oam")
 v1alpha1.extension(name="kafka", repo_name="local", repo_path="kafka")
-v1alpha1.extension(name="cn-pg", repo_name="local", repo_path="cloudnative-pg")
+v1alpha1.extension(name="cloudnative-pg", repo_name="local", repo_path="cloudnative-pg")
 load("ext://vault", "vault_deploy")
 load("ext://oam", "oam_deploy")
 load("ext://kafka", "kafka_deploy")
-load("ext://cn-pg", "cn_pg_deploy")
+load("ext://cloudnative-pg", "cloudnative_pg_deploy")
 load("ext://helm_resource", "helm_resource", "helm_repo")
 load("ext://namespace", "namespace_yaml")
 
@@ -32,7 +32,7 @@ oam_deploy(values_file="./src/helm/oam/values.yaml")
 
 kafka_deploy(values_file="./src/helm/kafka/values.yaml")
 
-cn_pg_deploy(values_file="./src/helm/postgres/values.yaml")
+cloudnative_pg_deploy(values_file="./src/helm/postgres/values.yaml")
 
 k8s_yaml(namespace_yaml("foo"))
 helm_resource(
