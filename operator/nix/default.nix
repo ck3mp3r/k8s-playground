@@ -10,7 +10,10 @@
   toolchain = with fenix.packages.${system};
     combine [
       stable.cargo
+      stable.clippy
+      stable.rust-analyzer
       stable.rustc
+      stable.rustfmt
       targets.aarch64-unknown-linux-musl.stable.rust-std
       targets.x86_64-unknown-linux-musl.stable.rust-std
     ];
