@@ -12,12 +12,10 @@ pub async fn reconcile(obj: Arc<Subscriber>, ctx: Arc<SharedState>) -> Result<Ac
     let namespace = obj.namespace().unwrap_or_else(|| "default".to_string());
     let api: Api<Subscriber> = Api::namespaced(ctx.client.clone(), &namespace);
 
-    // Use `SubscriberStatus` to define the desired status
     let status = SubscriberStatus {
         status: "Reconciled".to_string(),
     };
 
-    // Serialize the payload, including metadata
     let payload = json!({
         "metadata": {
             "name": obj.name_any(),
@@ -32,7 +30,7 @@ pub async fn reconcile(obj: Arc<Subscriber>, ctx: Arc<SharedState>) -> Result<Ac
         .patch_status(
             &obj.name_any(),
             &patch_params,
-            &kube::api::Patch::Merge(payload), // Use Merge for a type-safe, minimal patch
+            &kube::api::Patch::Merge(payload),
         )
         .await;
 
@@ -42,7 +40,7 @@ pub async fn reconcile(obj: Arc<Subscriber>, ctx: Arc<SharedState>) -> Result<Ac
                 "Successfully updated status for Subscriber {:?}",
                 obj.metadata.name
             );
-            Ok(Action::requeue(std::time::Duration::from_secs(300))) // Requeue after 5 minutes
+            Ok(Action::requeue(std::time::Duration::from_secs(300)))
         }
         Err(err) => {
             eprintln!(
@@ -54,16 +52,11 @@ pub async fn reconcile(obj: Arc<Subscriber>, ctx: Arc<SharedState>) -> Result<Ac
     }
 }
 
-pub fn error_policy(
-    obj: Arc<Subscriber>,   // The object associated with the error
-    error: &kube::Error,    // The error encountered during reconciliation
-    _ctx: Arc<SharedState>, // Shared context (not used in this example)
-) -> Action {
+pub fn error_policy(obj: Arc<Subscriber>, error: &kube::Error, _ctx: Arc<SharedState>) -> Action {
     eprintln!(
         "Error reconciling Subscriber {:?}: {:?}",
         obj.metadata.name, error
     );
 
-    // Decide to requeue the reconciliation
-    Action::requeue(std::time::Duration::from_secs(60)) // Retry after 1 minute
+    Action::requeue(std::time::Duration::from_secs(60))
 }
