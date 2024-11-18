@@ -1,5 +1,5 @@
+use kube::CustomResourceExt;
 use operator::crd::subscriber::Subscriber; // Import from the `operator` crate
-use kube::CustomResourceExt; 
 use std::fs;
 
 fn main() -> anyhow::Result<()> {
@@ -15,4 +15,3 @@ fn main() -> anyhow::Result<()> {
     println!("CRDs generated successfully in the 'crds/' directory.");
     Ok(())
 }
-
