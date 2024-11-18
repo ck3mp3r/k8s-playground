@@ -1,6 +1,7 @@
 use crate::crd::subscriber::{Subscriber, SubscriberStatus};
 use crate::operator::constants::field_manager;
 use crate::operator::shared_state::SharedState;
+use kube::api::{Patch, PatchParams};
 use kube::runtime::controller::Action;
 use kube::{Api, ResourceExt};
 use serde_json::json;
@@ -16,21 +17,17 @@ pub async fn reconcile(obj: Arc<Subscriber>, ctx: Arc<SharedState>) -> Result<Ac
         status: "Reconciled".to_string(),
     };
 
-    let payload = json!({
-        "metadata": {
-            "name": obj.name_any(),
-            "namespace": namespace,
-        },
-        "status": status
-    });
-
-    let patch_params = kube::api::PatchParams::apply(field_manager::SUBSCRIBER);
-
     let res = api
         .patch_status(
             &obj.name_any(),
-            &patch_params,
-            &kube::api::Patch::Merge(payload),
+            &PatchParams::apply(field_manager::SUBSCRIBER),
+            &Patch::Merge(json!({
+                "metadata": {
+                    "name": obj.name_any(),
+                    "namespace": namespace,
+                },
+                "status": status
+            })),
         )
         .await;
 
