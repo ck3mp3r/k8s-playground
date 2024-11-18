@@ -36,12 +36,18 @@ help = "tear tilt managed services/resources down"
 
 [[commands]]
 name = "crds"
-command = "cd operator && cargo run --bin gen_crds"
+command = "cd $PRJ_ROOT/operator && cargo run --bin gen_crds"
 category = "operator"
 help = "generate crds from code"
 
 [[commands]]
 name = "run"
-command = "cd operator && cargo run --bin operator"
+command = "cd $PRJ_ROOT/operator && cargo run --bin operator"
 category = "operator"
 help = "run operator"
+
+[[commands]]
+name = "clippy"
+command = "cd $PRJ_ROOT/operator && cargo clippy"
+category = "operator"
+help = "run clippy"
