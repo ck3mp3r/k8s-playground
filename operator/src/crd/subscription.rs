@@ -15,7 +15,12 @@ pub struct SubscriptionSpec {
 }
 
 #[derive(CustomResource, Deserialize, Serialize, Clone, Debug, JsonSchema)]
-#[kube(group = "kemper.buzz", version = "v1alpha1", kind = "Product", namespaced)]
+#[kube(
+    group = "kemper.buzz",
+    version = "v1alpha1",
+    kind = "Product",
+    namespaced
+)]
 pub struct ProductSpec {
     pub name: String,
     pub price: f64,
