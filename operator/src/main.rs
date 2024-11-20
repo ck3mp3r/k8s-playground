@@ -1,12 +1,12 @@
 mod crd;
 mod operator;
 
-use kube::{Api, Client};
-use kube::runtime::controller::Controller;
 use futures::StreamExt;
-use std::sync::Arc;
+use kube::runtime::controller::Controller;
+use kube::{Api, Client};
 use operator::shared_state::SharedState;
-use operator::subscriber::{reconcile, error_policy};
+use operator::subscriber::{error_policy, reconcile};
+use std::sync::Arc;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -22,9 +22,9 @@ async fn main() -> anyhow::Result<()> {
     // Controller logic
     Controller::new(subscribers, Default::default())
         .run(
-            reconcile,                         // Reconciliation logic
-            error_policy,                      // Error handling logic
-            shared_state.clone(),              // Shared context
+            reconcile,            // Reconciliation logic
+            error_policy,         // Error handling logic
+            shared_state.clone(), // Shared context
         )
         .for_each(|result| async move {
             match result {
@@ -36,4 +36,3 @@ async fn main() -> anyhow::Result<()> {
 
     Ok(())
 }
-
