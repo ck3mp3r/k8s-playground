@@ -1,11 +1,6 @@
-mod crd;
-
-mod operator;
-
 use k8s_openapi::chrono;
 use kube::Client;
-use operator::shared_state::SharedState;
-use operator::subscriber::controller;
+use operator::{operator::shared_state::SharedState, operator::subscriber::controller};
 use std::io::Write;
 use std::sync::Arc;
 #[tokio::main]
