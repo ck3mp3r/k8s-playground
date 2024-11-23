@@ -1,5 +1,5 @@
 use kube::CustomResourceExt;
-use operator::crd::subscriber::Subscriber; // Import from the `operator` crate
+use operator::subscriber::crd::Subscriber;
 use std::fs;
 
 fn main() -> anyhow::Result<()> {

@@ -1,7 +1,6 @@
-use crate::crd;
-use crate::crd::subscriber::{Subscriber, SubscriberStatus};
-use crate::operator::constants::field_manager;
-use crate::operator::shared_state::SharedState;
+use crate::subscriber::constants::field_manager;
+use crate::subscriber::crd::{Subscriber, SubscriberStatus};
+use crate::subscriber::shared_state::SharedState;
 use futures::StreamExt;
 use kube::api::{Patch, PatchParams};
 use kube::runtime::controller::Action;
@@ -67,7 +66,7 @@ pub fn error_policy(obj: Arc<Subscriber>, error: &kube::Error, _ctx: Arc<SharedS
 pub async fn controller(shared_state: Arc<SharedState>) {
     // API for the Subscriber CRD
     let client = shared_state.client.clone();
-    let subscribers: Api<crd::subscriber::Subscriber> = Api::all(client);
+    let subscribers: Api<Subscriber> = Api::all(client);
 
     // Controller logic
     Controller::new(subscribers, Default::default())
