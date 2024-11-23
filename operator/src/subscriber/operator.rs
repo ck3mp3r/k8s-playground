@@ -10,6 +10,21 @@ use log::{error, info};
 use serde_json::json;
 use std::sync::Arc;
 
+pub async fn controller(shared_state: Arc<SharedState>) {
+    let client = shared_state.client.clone();
+    let subscribers: Api<Subscriber> = Api::all(client);
+
+    Controller::new(subscribers, Default::default())
+        .run(reconcile, error_policy, shared_state.clone())
+        .for_each(|result| async move {
+            match result {
+                Ok(obj_ref) => info!("Reconciled: {:?}", obj_ref),
+                Err(err) => error!("Error during reconciliation: {:?}", err),
+            }
+        })
+        .await;
+}
+
 pub async fn reconcile(obj: Arc<Subscriber>, ctx: Arc<SharedState>) -> Result<Action, kube::Error> {
     log::info!("Reconciling Subscriber: {:?}", obj.metadata.name);
 
@@ -48,7 +63,7 @@ pub async fn reconcile(obj: Arc<Subscriber>, ctx: Arc<SharedState>) -> Result<Ac
                 obj.metadata.name,
                 err
             );
-            Err(err) // Propagate the error to retry
+            Err(err)
         }
     }
 }
@@ -61,25 +76,4 @@ pub fn error_policy(obj: Arc<Subscriber>, error: &kube::Error, _ctx: Arc<SharedS
     );
 
     Action::requeue(std::time::Duration::from_secs(60))
-}
-
-pub async fn controller(shared_state: Arc<SharedState>) {
-    // API for the Subscriber CRD
-    let client = shared_state.client.clone();
-    let subscribers: Api<Subscriber> = Api::all(client);
-
-    // Controller logic
-    Controller::new(subscribers, Default::default())
-        .run(
-            reconcile,            // Reconciliation logic
-            error_policy,         // Error handling logic
-            shared_state.clone(), // Shared context
-        )
-        .for_each(|result| async move {
-            match result {
-                Ok(obj_ref) => info!("Reconciled: {:?}", obj_ref),
-                Err(err) => error!("Error during reconciliation: {:?}", err),
-            }
-        })
-        .await;
 }
