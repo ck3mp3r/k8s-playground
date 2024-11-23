@@ -8,7 +8,7 @@ fn main() -> anyhow::Result<()> {
 
     // Generate and write the Subscriber CRD
     fs::write(
-        "../crds/subscriber-crd.yaml",
+        "../crds/subscriber.yaml",
         serde_yaml::to_string(&Subscriber::crd())?,
     )?;
 
