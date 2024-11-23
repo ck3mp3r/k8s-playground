@@ -1,6 +1,6 @@
-use k8s_openapi::chrono;
+use k8s_openapi::chrono::Utc;
 use kube::Client;
-use operator::{operator::shared_state::SharedState, operator::subscriber::controller};
+use operator::subscriber::{operator::controller, shared_state::SharedState};
 use std::io::Write;
 use std::sync::Arc;
 #[tokio::main]
@@ -14,7 +14,7 @@ async fn main() -> anyhow::Result<()> {
                     "level": record.level().to_string(),
                     "target": record.target(),
                     "message": record.args(),
-                    "timestamp": chrono::Utc::now().to_rfc3339(),
+                    "timestamp": Utc::now().to_rfc3339(),
                 }),
             )
             .unwrap();
