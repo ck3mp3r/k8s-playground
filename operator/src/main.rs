@@ -1,8 +1,7 @@
 use k8s_openapi::chrono::Utc;
 use kube::Client;
-use operator::subscriber::{operator::controller, shared_state::SharedState};
+use operator::subscriber::operator::controller;
 use std::io::Write;
-use std::sync::Arc;
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     env_logger::Builder::from_default_env()
@@ -22,15 +21,11 @@ async fn main() -> anyhow::Result<()> {
         })
         .init();
 
-    // Initialize Kubernetes client
     let client = Client::try_default().await?;
 
-    // Shared state for the reconciler
-    let shared_state = Arc::new(SharedState::new(client.clone()));
+    let subscriber = tokio::spawn(controller(client.clone()));
 
-    let controller1 = tokio::spawn(controller(shared_state.clone()));
-
-    tokio::try_join!(controller1)?;
+    tokio::try_join!(subscriber)?;
 
     Ok(())
 }

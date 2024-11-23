@@ -10,9 +10,11 @@ use log::{error, info};
 use serde_json::json;
 use std::sync::Arc;
 
-pub async fn controller(shared_state: Arc<SharedState>) {
-    let client = shared_state.client.clone();
-    let subscribers: Api<Subscriber> = Api::all(client);
+pub async fn controller(client: kube::Client) {
+    let subscribers: Api<Subscriber> = Api::all(client.clone());
+    let shared_state = Arc::new(SharedState {
+        client: client.clone(),
+    });
 
     Controller::new(subscribers, Default::default())
         .run(reconcile, error_policy, shared_state.clone())
@@ -55,7 +57,7 @@ pub async fn reconcile(obj: Arc<Subscriber>, ctx: Arc<SharedState>) -> Result<Ac
                 "Successfully updated status for Subscriber {:?}",
                 obj.metadata.name
             );
-            Ok(Action::requeue(std::time::Duration::from_secs(300)))
+            Ok(Action::await_change())
         }
         Err(err) => {
             log::error!(
