@@ -8,7 +8,7 @@ use serde_json::json;
 use std::sync::Arc;
 
 pub async fn reconcile(obj: Arc<Subscriber>, ctx: Arc<SharedState>) -> Result<Action, kube::Error> {
-    println!("Reconciling Subscriber: {:?}", obj.metadata.name);
+    log::info!("Reconciling Subscriber: {:?}", obj.metadata.name);
 
     let namespace = obj.namespace().unwrap_or_else(|| "default".to_string());
     let api: Api<Subscriber> = Api::namespaced(ctx.client.clone(), &namespace);
@@ -33,16 +33,17 @@ pub async fn reconcile(obj: Arc<Subscriber>, ctx: Arc<SharedState>) -> Result<Ac
 
     match res {
         Ok(_) => {
-            println!(
+            log::info!(
                 "Successfully updated status for Subscriber {:?}",
                 obj.metadata.name
             );
             Ok(Action::requeue(std::time::Duration::from_secs(300)))
         }
         Err(err) => {
-            eprintln!(
+            log::error!(
                 "Error reconciling Subscriber {:?}: {:?}",
-                obj.metadata.name, err
+                obj.metadata.name,
+                err
             );
             Err(err) // Propagate the error to retry
         }
@@ -50,9 +51,10 @@ pub async fn reconcile(obj: Arc<Subscriber>, ctx: Arc<SharedState>) -> Result<Ac
 }
 
 pub fn error_policy(obj: Arc<Subscriber>, error: &kube::Error, _ctx: Arc<SharedState>) -> Action {
-    eprintln!(
+    log::error!(
         "Error reconciling Subscriber {:?}: {:?}",
-        obj.metadata.name, error
+        obj.metadata.name,
+        error
     );
 
     Action::requeue(std::time::Duration::from_secs(60))
