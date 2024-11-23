@@ -1,9 +1,13 @@
+use crate::crd;
 use crate::crd::subscriber::{Subscriber, SubscriberStatus};
 use crate::operator::constants::field_manager;
 use crate::operator::shared_state::SharedState;
+use futures::StreamExt;
 use kube::api::{Patch, PatchParams};
 use kube::runtime::controller::Action;
+use kube::runtime::Controller;
 use kube::{Api, ResourceExt};
+use log::{error, info};
 use serde_json::json;
 use std::sync::Arc;
 
@@ -58,4 +62,25 @@ pub fn error_policy(obj: Arc<Subscriber>, error: &kube::Error, _ctx: Arc<SharedS
     );
 
     Action::requeue(std::time::Duration::from_secs(60))
+}
+
+pub async fn controller(shared_state: Arc<SharedState>) {
+    // API for the Subscriber CRD
+    let client = shared_state.client.clone();
+    let subscribers: Api<crd::subscriber::Subscriber> = Api::all(client);
+
+    // Controller logic
+    Controller::new(subscribers, Default::default())
+        .run(
+            reconcile,            // Reconciliation logic
+            error_policy,         // Error handling logic
+            shared_state.clone(), // Shared context
+        )
+        .for_each(|result| async move {
+            match result {
+                Ok(obj_ref) => info!("Reconciled: {:?}", obj_ref),
+                Err(err) => error!("Error during reconciliation: {:?}", err),
+            }
+        })
+        .await;
 }
