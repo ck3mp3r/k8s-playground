@@ -20,12 +20,35 @@ spec:
         properties:
           spec:
             properties:
+              description:
+                type: string
+              display_name:
+                type: string
+              helm_chart:
+                properties:
+                  name:
+                    type: string
+                  registry:
+                    type: string
+                  version:
+                    type: string
+                required:
+                - name
+                - registry
+                - version
+                type: object
               id:
+                type: string
+              identifier:
                 type: string
               name:
                 type: string
             required:
+            - description
+            - display_name
+            - helm_chart
             - id
+            - identifier
             - name
             type: object
           status:

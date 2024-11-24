@@ -1,6 +1,7 @@
+use anyhow::anyhow;
 use kube::CustomResource;
 use schemars::JsonSchema;
-use serde::{Deserialize, Serialize};
+use serde::{de::Error, Deserialize, Deserializer, Serialize};
 
 #[derive(CustomResource, Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[kube(
@@ -12,11 +13,34 @@ use serde::{Deserialize, Serialize};
     status = "ProductStatus"
 )]
 pub struct ProductSpec {
-    pub name: String,
     pub id: String,
+    #[serde(deserialize_with = "deserialize_identifier")]
+    pub identifier: String,
+    pub name: String,
+    pub display_name: String,
+    pub description: String,
+    pub helm_chart: HelmChart,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, Default)]
 pub struct ProductStatus {
     pub status: String,
 }
+
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, Default)]
+pub struct HelmChart {
+    pub name: String,
+    pub registry: String,
+    pub version: String,
+}
+
+fn deserialize_identifier<'de, D: Deserializer<'de>>(deserializer: D) -> Result<String, D::Error> {
+    let s = String::deserialize(deserializer)?;
+    let re = regex::Regex::new(r"^[a-zA-Z0-9]+:[a-zA-Z0-9]+:v?[0-9]+\.[0-9]+\.[0-9]+$").unwrap();
+    if re.is_match(&s) {
+        Ok(s)
+    } else {
+        Err(Error::custom(anyhow!("Invalid identifier format: {}", s)))
+    }
+}
+

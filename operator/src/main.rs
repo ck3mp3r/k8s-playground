@@ -1,6 +1,7 @@
 use k8s_openapi::chrono::Utc;
 use kube::Client;
-use operator::subscriber::operator::controller;
+use operator::product::operator::controller as product_controller;
+use operator::subscriber::operator::controller as subscription_controller;
 use std::io::Write;
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -23,9 +24,10 @@ async fn main() -> anyhow::Result<()> {
 
     let client = Client::try_default().await?;
 
-    let subscriber = tokio::spawn(controller(client.clone()));
+    let subscriber = tokio::spawn(subscription_controller(client.clone()));
+    let product = tokio::spawn(product_controller(client.clone()));
 
-    tokio::try_join!(subscriber)?;
+    tokio::try_join!(subscriber, product)?;
 
     Ok(())
 }
