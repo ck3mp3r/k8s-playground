@@ -1,15 +1,11 @@
 v1alpha1.extension_repo(
-    name="custom", url="https://github.com/ck3mp3r/tilt-extensions"
+    name="custom", url="https://github.com/ck3mp3r/tilt-extensions", load_host="custom"
 )
-v1alpha1.extension(name="vault", repo_name="custom", repo_path="vault")
-v1alpha1.extension(name="kubevela", repo_name="custom", repo_path="kubevela")
-v1alpha1.extension(name="kafka", repo_name="custom", repo_path="kafka")
-v1alpha1.extension(name="cloudnative_pg", repo_name="custom", repo_path="cloudnative_pg")
 
-load("ext://vault", "vault_deploy")
-load("ext://kubevela", "kubevela_deploy")
-load("ext://kafka", "kafka_deploy")
-load("ext://cloudnative_pg", "cloudnative_pg_deploy")
+load("ext://custom/vault", "vault_deploy")
+load("ext://custom/kubevela", "kubevela_deploy")
+load("ext://custom/kafka", "kafka_deploy")
+load("ext://custom/cloudnative_pg", "cloudnative_pg_deploy")
 load("ext://helm_resource", "helm_resource", "helm_repo")
 load("ext://namespace", "namespace_yaml")
 
