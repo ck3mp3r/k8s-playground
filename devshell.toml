@@ -2,7 +2,9 @@
 packages = [
   "helm-ls",
   "pyright",
-  "black"
+  "black",
+  "nodejs_23",
+  "yarn"
 ]
 
 [[commands]]

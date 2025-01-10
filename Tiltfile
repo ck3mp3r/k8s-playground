@@ -7,6 +7,7 @@ load("ext://custom/kubevela", "kubevela_deploy")
 load("ext://custom/kafka", "kafka_deploy")
 load("ext://custom/cloudnative_pg", "cloudnative_pg_deploy")
 load("ext://helm_resource", "helm_resource", "helm_repo")
+load("ext://helm_remote", "helm_remote")
 load("ext://namespace", "namespace_yaml")
 
 update_settings(  # type: ignore
@@ -45,4 +46,12 @@ helm_resource(
     namespace="foo",
     labels="silly",
     resource_deps=["kubevela-local"],
+)
+
+k8s_yaml(namespace_yaml("backstage"))
+helm_remote(
+    "backstage",
+    repo_name="backstage",
+    repo_url="https://backstage.github.io/charts",
+    namespace="backstage",
 )
