@@ -1,0 +1,16 @@
+apiVersion: kemper.buzz/v1alpha1
+kind: Product
+metadata:
+  name: example-product
+spec:
+  description: "This is an example product"
+  display_name: "Example Product"
+  helm_chart:
+    name: "example-chart"
+    registry: "example-registry"
+    version: "1.0.0"
+  id: "example-id"
+  identifier: "foo:bar:v1.0.0"
+  name: "example-name"
+status:
+  status: "active"
