@@ -10,7 +10,7 @@ load("ext://helm_resource", "helm_resource", "helm_repo")
 load("ext://helm_remote", "helm_remote")
 load("ext://namespace", "namespace_yaml")
 
-update_settings(  # type: ignore
+update_settings(
     max_parallel_updates=4,
     k8s_upsert_timeout_secs=240,
     suppress_unused_image_warnings=None,
@@ -27,8 +27,8 @@ vault_deploy(
 )
 
 kubevela_deploy()
-kafka_deploy(values_file="./helm/kafka/values.yaml")
 cloudnative_pg_deploy()
+kafka_deploy(values_file="./helm/kafka/values.yaml")
 
 k8s_yaml(namespace_yaml("foo"))
 helm_resource(
