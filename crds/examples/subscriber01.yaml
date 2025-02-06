@@ -1,0 +1,7 @@
+apiVersion: kemper.buzz/v1alpha1
+kind: Subscriber
+metadata:
+  name: example-subscriber
+spec:
+  id: "12345"
+  name: "John Doe"

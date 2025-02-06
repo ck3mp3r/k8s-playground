@@ -23,13 +23,29 @@ package = "tilt"
 category = "kubeops"
 
 [[commands]]
-name = "up"
-command = "tilt up"
+name = "kind-start"
+command = '''
+  COLIMA_IP=$(colima ls --json | jq -r '.address')
+  kind create cluster --config=$PRJ_ROOT/kind/cluster.yaml --name=k8s-playground
+  echo "The cluster IP is: ${COLIMA_IP}"
+'''
 category = "kubeops"
-help = "bring tilt managed services/resources up"
+help = "Start kind cluster"
 
 [[commands]]
-name = "down"
-command = "tilt down --delete-namespaces"
-category = "kubeops"
-help = "tear tilt managed services/resources down"
+name = "crds"
+command = "cd $PRJ_ROOT/operator && cargo run --bin gen_crds"
+category = "operator"
+help = "generate crds from code"
+
+[[commands]]
+name = "run"
+command = "cd $PRJ_ROOT/operator && cargo run --bin operator"
+category = "operator"
+help = "run operator"
+
+[[commands]]
+name = "clippy"
+command = "cd $PRJ_ROOT/operator && cargo clippy"
+category = "operator"
+help = "run clippy"
